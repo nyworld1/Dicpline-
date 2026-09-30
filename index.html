@@ -1,0 +1,341 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1020"><link rel="manifest" href="manifest.json"><title>Ash Discipline</title><style>
+:root{--bg:#f4f6fb;--card:#fff;--soft:#eef1f6;--text:#111827;--muted:#667085;--line:#e4e7ec;--a:#6d5dfc;--a2:#8b7cff;--good:#12b76a;--shadow:0 12px 35px rgba(16,24,40,.08)}
+[data-theme=dark]{--bg:#080c16;--card:#111827;--soft:#182132;--text:#f7f8fc;--muted:#98a2b3;--line:#293548;--a:#8b7cff;--a2:#6d5dfc;--good:#32d583;--shadow:0 14px 40px rgba(0,0,0,.3)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}button,input,textarea{font:inherit}button{cursor:pointer}
+.app{max-width:1080px;margin:auto;padding:18px 16px 105px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.brand{display:flex;gap:11px;align-items:center}.logo{width:45px;height:45px;border-radius:15px;background:linear-gradient(135deg,var(--a),var(--a2));color:#fff;display:grid;place-items:center;font-weight:900}.brand h1{font-size:18px;margin:0}.brand p{font-size:12px;color:var(--muted);margin:2px 0}.icon{width:44px;height:44px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text)}
+.view{display:none}.view.active{display:block}.grid{display:grid;grid-template-columns:1.35fr .9fr;gap:16px}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow)}
+.hero{background:linear-gradient(135deg,var(--a),#4538c9);color:#fff;border:0;overflow:hidden}.heroRow{display:flex;align-items:center;justify-content:space-between;gap:18px}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:10px;font-weight:850;opacity:.8}.hero h2{font-size:29px;margin:7px 0}.hero p{margin:0;opacity:.84}
+.ring{width:118px;height:118px;position:relative;flex:none}.ring svg{width:100%;height:100%;transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:9}.track{stroke:rgba(255,255,255,.18)}.value{stroke:#fff;stroke-linecap:round;stroke-dasharray:320;stroke-dashoffset:320;transition:stroke-dashoffset .8s ease}.ringText{position:absolute;inset:0;display:grid;place-items:center;text-align:center}.ringText b{font-size:23px;display:block}.ringText span{font-size:10px;opacity:.8}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}.stat{background:rgba(255,255,255,.12);border-radius:17px;padding:13px}.stat b{display:block;font-size:22px}.stat span{font-size:10px;opacity:.78}
+.sectionHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.sectionHead h3{margin:0;font-size:16px}.mini{font-size:11px;color:var(--muted)}
+.checks{display:grid;gap:9px}.check{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--soft);transition:.2s}.check.done{border-color:rgba(18,183,106,.35)}.check input{width:21px;height:21px;accent-color:var(--good)}.check label{font-size:13px;font-weight:650}.check.done label{text-decoration:line-through;opacity:.52}
+.timer{display:flex;align-items:center;justify-content:space-between;background:var(--soft);border-radius:18px;padding:15px}.timer b{font-size:30px;font-variant-numeric:tabular-nums}.progress{height:8px;background:var(--soft);border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--a),var(--a2));transition:width .5s}.btn{border:0;border-radius:13px;padding:11px 14px;font-weight:750}.primary{background:var(--a);color:#fff}.ghost{background:var(--soft);color:var(--text);border:1px solid var(--line)}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}input,textarea{width:100%;border:1px solid var(--line);background:var(--soft);color:var(--text);border-radius:14px;padding:12px;outline:0}textarea{min-height:78px;resize:vertical}input:focus,textarea:focus{border-color:var(--a)}
+.anthem{background:var(--soft);border-left:4px solid var(--a);border-radius:0 16px 16px 0;padding:15px;line-height:1.55;font-size:14px;font-weight:650}
+.calendar{display:grid;grid-template-columns:repeat(14,1fr);gap:5px}.day{aspect-ratio:1;border:1px solid var(--line);background:var(--soft);border-radius:7px;color:var(--muted);font-size:9px;display:grid;place-items:center}.day.done{background:var(--good);border-color:var(--good);color:#fff}.day.today{outline:2px solid var(--a);outline-offset:2px}.day.selected{box-shadow:0 0 0 2px var(--a)}
+.badge{font-size:10px;font-weight:800;color:var(--good);background:rgba(18,183,106,.12);padding:6px 9px;border-radius:99px}
+.nav{position:fixed;z-index:50;left:50%;bottom:12px;transform:translateX(-50%);width:min(720px,calc(100% - 24px));display:grid;grid-template-columns:repeat(4,1fr);padding:7px;background:color-mix(in srgb,var(--card) 93%,transparent);backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:23px;box-shadow:var(--shadow)}.nav button{border:0;background:transparent;color:var(--muted);border-radius:16px;padding:8px 4px;font-size:10px}.nav button.active{background:var(--soft);color:var(--a);font-weight:850}.nav span{display:block;font-size:18px;margin-bottom:2px}
+@media(max-width:760px){.app{padding:14px 12px 100px}.grid,.two{grid-template-columns:1fr}.card{padding:16px;border-radius:20px}.hero h2{font-size:25px}.calendar{grid-template-columns:repeat(10,1fr)}.fields{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.modalBack{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);z-index:100;display:none;align-items:center;justify-content:center;padding:16px}
+.modalBack.show{display:flex}.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:20px;box-shadow:0 25px 80px rgba(0,0,0,.28)}
+.habitRow{display:grid;grid-template-columns:1fr 120px 145px auto;gap:8px;align-items:end}.habitRow+.habitRow{margin-top:9px}
+.chartWrap{position:relative;height:260px;margin-top:10px}.reportGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.metricCard{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:14px}.metricCard b{display:block;font-size:24px}.metricCard span{font-size:11px;color:var(--muted)}
+.habitItem{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--soft)}
+.habitMeta{margin-left:auto;display:flex;align-items:center;gap:7px;color:var(--muted);font-size:10px}
+.smallBtn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;padding:8px 10px;font-weight:750}
+.syncBox{background:linear-gradient(135deg,rgba(109,93,252,.12),rgba(139,124,255,.06));border:1px solid rgba(109,93,252,.25);border-radius:18px;padding:14px}
+.code{font-family:ui-monospace,SFMono-Regular,monospace;font-weight:850;letter-spacing:.13em;font-size:18px}
+@media(max-width:760px){.reportGrid{grid-template-columns:1fr}.chartWrap{height:220px}.habitRow{grid-template-columns:1fr 1fr}.habitRow input:first-child{grid-column:1/-1}.habitRow button{grid-column:1/-1}}
+</style></head><body>
+<div class="app">
+<header class="top"><div class="brand"><div class="logo">ASH</div><div><h1>Ash Discipline</h1><p>Your habits. Your progress.</p></div></div><button class="icon" id="theme">☀</button></header>
+
+<section class="view active" id="today"><div class="grid">
+<div class="card hero"><div class="heroRow"><div><div class="eyebrow" id="date">Today</div><h2 id="dayTitle">Day 1</h2><p id="heroSub">Do the next right thing.</p></div><div class="ring"><svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="51"/><circle class="value" id="ring" cx="60" cy="60" r="51"/></svg><div class="ringText"><div><b id="pct">0%</b><span>complete</span></div></div></div></div><div class="stats"><div class="stat"><b id="streak">0</b><span>streak</span></div><div class="stat"><b id="mins">0</b><span>focus min</span></div><div class="stat"><b id="done">0/0</b><span>habits</span></div></div></div>
+
+<div class="card"><div class="sectionHead"><h3>Focus sprint</h3><span class="badge">15 min</span></div><div class="timer"><div><div class="mini">Start small</div><b id="timer">15:00</b></div><button class="btn primary" id="timerBtn">Start</button></div><div class="progress" style="margin-top:10px"><i id="timerProgress"></i></div></div>
+
+<div class="card"><div class="sectionHead"><h3>Today's habits</h3><button class="btn primary" id="addHabitTop">+ Add habit</button></div><div class="checks" id="checks"></div></div>
+
+<div class="card"><div class="sectionHead"><h3>Today's plan</h3><span class="mini" id="planDate">—</span></div><div class="fields"><div class="field"><label>Most important task</label><input id="task" type="text" placeholder="What matters most?"></div><div class="field"><label>Focused minutes</label><input id="minutes" type="number" min="0" max="1440" placeholder="e.g. 120"></div></div><div class="actions"><button class="btn primary" id="save">Save today</button><button class="btn ghost" id="reset">Reset day</button><button class="btn ghost" id="export">Backup</button></div></div>
+
+<div class="card"><div class="sectionHead"><h3>Reflection</h3><span class="mini">Save your progress</span></div><div class="fields"><div class="field"><label>What I learned</label><textarea id="learned" placeholder="One useful thing..."></textarea></div><div class="field"><label>What I did well</label><textarea id="well" placeholder="Give yourself credit..."></textarea></div></div></div>
+
+<div class="card"><div class="sectionHead"><h3>Daily anthem</h3><span class="mini" id="anthemDay">Day 1</span></div><div class="anthem" id="anthem"></div></div>
+</div></section>
+
+<section class="view" id="days"><div class="card"><div class="sectionHead"><h3 id="journeyTitle">Challenge journey</h3><span class="mini">Tap a day</span></div><div class="calendar" id="calendar"></div></div><div class="card" style="margin-top:16px"><div class="sectionHead"><h3>Never miss twice</h3></div><p class="mini" style="font-size:14px;line-height:1.6">A bad day does not erase the work. Reset with one small action: phone away, 15 minutes of focus, then continue.</p></div></section>
+
+<section class="view" id="statsView"><div class="two"><div class="card"><div class="sectionHead"><h3>Consistency</h3><span class="badge">Live</span></div><div class="stat" style="background:var(--soft)"><b id="full">0</b><span>fully completed days</span></div><div class="progress" style="margin-top:14px"><i id="overall"></i></div></div><div class="card"><div class="sectionHead"><h3>Best streak</h3></div><div class="stat" style="background:var(--soft)"><b id="best">0</b><span>days in a row</span></div></div></div><div class="card" style="margin-top:16px"><div class="sectionHead"><h3>Progress report</h3><span class="mini" id="reportRange">Challenge</span></div><div class="reportGrid"><div class="metricCard"><b id="reportCompletion">0%</b><span>overall completion</span></div><div class="metricCard"><b id="reportFocus">0</b><span>focus minutes</span></div><div class="metricCard"><b id="reportActive">0</b><span>active habits</span></div><div class="metricCard"><b id="reportBest">0</b><span>best streak</span></div></div></div><div class="card" style="margin-top:16px"><div class="sectionHead"><h3>Completion trend</h3><span class="mini">Daily</span></div><div class="chartWrap"><canvas id="completionChart"></canvas></div></div><div class="card" style="margin-top:16px"><div class="sectionHead"><h3>Habit distribution</h3><span class="mini">Completed checks</span></div><div class="chartWrap"><canvas id="habitPie"></canvas></div></div><div class="card" style="margin-top:16px"><div class="sectionHead"><h3>Habit progress</h3></div><div class="checks" id="habitStats"></div></div></section>
+
+<section class="view" id="profile"><div class="card"><div class="sectionHead"><h3>Personal setup</h3><span class="mini">Your space</span></div><div class="fields"><div class="field"><label>Your name</label><input id="profileName" placeholder="Ash"></div><div class="field"><label>Challenge start date</label><input id="startDate" type="date"></div><div class="field"><label>Challenge length (days)</label><input id="challengeDays" type="number" min="1" max="1000" value="111"></div></div><div class="actions"><button class="btn primary" id="saveProfile">Save profile</button><button class="btn ghost" id="manageHabits">Manage habits</button></div></div>
+
+<div class="card" style="margin-top:16px"><div class="sectionHead"><h3>Habits</h3><button class="btn primary" id="addHabit">+ Add habit</button></div><div id="habitList" class="checks"></div></div>
+
+<div class="card" style="margin-top:16px"><div class="sectionHead"><h3>Cloud sync</h3><span class="badge" id="syncStatus">Local</span></div><div class="syncBox"><div class="mini">No login required. Use the same private sync code on your other devices.</div><div class="actions"><input id="syncCode" class="code" maxlength="12" placeholder="YOUR-SYNC-CODE" style="flex:1;text-transform:uppercase"><button class="btn primary" id="syncNow">Sync</button><button class="btn ghost" id="newCode">New code</button></div><p class="mini" style="margin:8px 0 0">Anyone who has your sync code can access the synced data. Keep it private.</p></div></div>
+
+<div class="card" style="margin-top:16px"><div class="sectionHead"><h3>Preferences</h3></div><button class="btn ghost" id="dark" style="width:100%;text-align:left">🌙 Toggle dark mode</button><button class="btn ghost" id="clear" style="width:100%;text-align:left;margin-top:8px">Clear local data</button><p class="mini" style="line-height:1.5;margin-top:14px">Ash Discipline works offline and keeps a local copy. Firebase sync is optional and works across your devices with your sync code.</p></div></section>
+</div>
+
+<nav class="nav"><button class="active" data-view="today"><span>⌂</span>Today</button><button data-view="days"><span>▦</span>111 Days</button><button data-view="statsView"><span>◔</span>Stats</button><button data-view="profile"><span>⚙</span>Profile</button></nav>
+
+<div class="modalBack" id="habitModal"><div class="modal"><div class="sectionHead"><h3 id="modalTitle">Add habit</h3><button class="icon" id="closeHabit">×</button></div><div class="field"><label>Habit name</label><input id="habitName" placeholder="e.g. Read 20 minutes"></div><div class="fields" style="margin-top:10px"><div class="field"><label>Reminder time</label><input id="habitTime" type="time"></div><div class="field"><label>Start date</label><input id="habitDate" type="date"></div></div><div class="actions"><button class="btn primary" id="saveHabit">Add habit</button><button class="btn ghost" id="cancelHabit">Cancel</button></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script>
+/* =========================
+   ASH DISCIPLINE
+   Firebase setup:
+   Replace the values below with your Firebase Web App config.
+   Database sync uses a private sync code; no login is required.
+   ========================= */
+const FIREBASE_CONFIG = {
+  apiKey: "PASTE_YOUR_FIREBASE_API_KEY",
+  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://PASTE_YOUR_PROJECT-default-rtdb.firebaseio.com",
+  projectId: "PASTE_YOUR_PROJECT",
+  storageBucket: "PASTE_YOUR_PROJECT.firebasestorage.app",
+  messagingSenderId: "PASTE_YOUR_SENDER_ID",
+  appId: "PASTE_YOUR_APP_ID"
+};
+
+(()=> {
+const K="ash-discipline-v3";
+const DEFAULT_HABITS=[
+ {id:"h1",name:"Wake up on time",time:"06:30"},
+ {id:"h2",name:"Phone away during study",time:"09:00"},
+ {id:"h3",name:"Complete planned study",time:"11:00"},
+ {id:"h4",name:"Active revision / questions",time:"15:00"},
+ {id:"h5",name:"Exercise / move body",time:"18:00"},
+ {id:"h6",name:"Communication practice",time:"18:30"},
+ {id:"h7",name:"Read",time:"20:00"},
+ {id:"h8",name:"Clean study space",time:"20:30"},
+ {id:"h9",name:"Sleep on time",time:"22:30"}
+];
+const ANTHEMS=[
+"I do not need perfect motivation. I need one honest start. Today I choose action over scrolling.",
+"Confidence grows when I keep promises to myself. I will keep one small promise today.",
+"My phone can wait. My goals cannot. I protect my attention like it matters.",
+"One focused hour can change the direction of a day. I begin with the next page.",
+"Discipline is choosing what I want most over what feels easiest right now.",
+"I am not behind. I am building. Every focused session is another brick.",
+"When the plan feels heavy, I shrink the task—not the goal. Start for fifteen minutes.",
+"I will not negotiate with every distraction. I will notice it, return, and continue.",
+"A difficult day is information, not a verdict. I reset and take the next step.",
+"Today I practice becoming someone I can trust: focused, consistent, and calm."
+];
+const todayISO=()=>{const d=new Date();d.setHours(0,0,0,0);return d.toISOString().slice(0,10)};
+const addDays=(iso,n)=>{const d=new Date(iso+"T00:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)};
+const fmt=(iso)=>new Date(iso+"T00:00:00").toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
+const uid=()=>Math.random().toString(36).slice(2,10);
+const makeCode=()=>("ASH-"+Math.random().toString(36).slice(2,8)).toUpperCase();
+let S=JSON.parse(localStorage.getItem(K)||"null")||{
+ name:"Ash",theme:"dark",selected:1,startDate:todayISO(),challengeDays:111,syncCode:makeCode(),habits:DEFAULT_HABITS,days:{}
+};
+S.habits=S.habits?.length?S.habits:DEFAULT_HABITS;
+S.startDate=S.startDate||todayISO();
+S.challengeDays=Math.max(1,Math.min(1000,Number(S.challengeDays)||111));
+S.selected=Math.min(Math.max(1,Number(S.selected)||1),S.challengeDays);
+S.syncCode=S.syncCode||makeCode();
+let currentDay=1, editingHabit=null, timer=null, left=900, syncing=false, db=null;
+
+function dayDate(n){return addDays(S.startDate,n-1)}
+function dayState(n){
+ if(!S.days[n]) S.days[n]={checks:{},task:"",minutes:0,learned:"",well:""};
+ return S.days[n];
+}
+function migrate(){
+ // migrate old array-based checklist data if present
+ Object.values(S.days).forEach(x=>{
+   if(Array.isArray(x.checks)){
+     const old=x.checks; x.checks={};
+     S.habits.forEach((h,i)=>x.checks[h.id]=!!old[i]);
+   }
+ });
+}
+migrate();
+
+function saveLocal(){localStorage.setItem(K,JSON.stringify(S));}
+function activeHabits(n){
+ const date=dayDate(n);
+ return S.habits.filter(h=>(h.startDate||S.startDate)<=date);
+}
+function completed(n){
+ const x=dayState(n), hs=activeHabits(n);
+ return hs.filter(h=>x.checks[h.id]).length;
+}
+function isFull(n){const hs=activeHabits(n);return hs.length>0 && completed(n)===hs.length}
+function streak(){
+ let s=0;
+ for(let i=S.challengeDays;i>=1;i--){if(isFull(i))s++;else if(s)break}
+ return s;
+}
+function stats(){
+ let full=0,best=0,run=0,total=0,totalPossible=0,focus=0;
+ for(let i=1;i<=S.challengeDays;i++){
+  const hs=activeHabits(i), c=completed(i); total+=c; totalPossible+=hs.length; focus+=Number(dayState(i).minutes)||0;
+  if(hs.length&&c===hs.length){full++;run++;best=Math.max(best,run)}else run=0;
+ }
+ return {full,best,total,totalPossible,focus};
+}
+let completionChart=null, habitPie=null;
+function renderCharts(){
+ const labels=[],vals=[];
+ for(let i=1;i<=S.challengeDays;i++){const hs=activeHabits(i);const c=completed(i);labels.push(String(i));vals.push(hs.length?Math.round(c/hs.length*100):0)}
+ const ctx=document.getElementById("completionChart");
+ if(ctx){if(completionChart)completionChart.destroy();completionChart=new Chart(ctx,{type:"line",data:{labels,datasets:[{label:"Completion %",data:vals,tension:.35,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+"%"}}}}})}
+ const names=[],data=[]; S.habits.forEach(h=>{let n=0;for(let q=1;q<=S.challengeDays;q++){if(activeHabits(q).some(a=>a.id===h.id)&&dayState(q).checks[h.id])n++} if(n>0){names.push(h.name);data.push(n)}});
+ const pc=document.getElementById("habitPie");
+ if(pc){if(habitPie)habitPie.destroy();habitPie=new Chart(pc,{type:"doughnut",data:{labels:names.length?names:["No completed habits yet"],datasets:[{data:data.length?data:[1]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}}}})}
+ const z=stats(); document.getElementById("reportCompletion").textContent=(z.totalPossible?Math.round(z.total/z.totalPossible*100):0)+"%";
+ document.getElementById("reportFocus").textContent=z.focus; document.getElementById("reportActive").textContent=S.habits.length; document.getElementById("reportBest").textContent=z.best; document.getElementById("reportRange").textContent=S.challengeDays+" days";
+}
+function render(){
+ document.documentElement.dataset.theme=S.theme;
+ document.getElementById("theme").textContent=S.theme==="dark"?"☀":"☾";
+ const n=S.selected,x=dayState(n),hs=activeHabits(n),c=completed(n),p=hs.length?Math.round(c/hs.length*100):0;
+ document.getElementById("date").textContent=fmt(dayDate(n));
+ document.getElementById("dayTitle").textContent="Day "+n;
+ document.getElementById("heroSub").textContent=(S.name||"Ash")+", do the next right thing.";
+ document.getElementById("pct").textContent=p+"%";
+ document.getElementById("done").textContent=c+"/"+hs.length;
+ document.getElementById("mins").textContent=x.minutes||0;
+ document.getElementById("streak").textContent=streak();
+ document.getElementById("ring").style.strokeDashoffset=320-(320*p/100);
+ document.getElementById("planDate").textContent=fmt(dayDate(n));
+ document.getElementById("task").value=x.task||"";
+ document.getElementById("minutes").value=x.minutes||"";
+ document.getElementById("learned").value=x.learned||"";
+ document.getElementById("well").value=x.well||"";
+ document.getElementById("anthem").textContent=ANTHEMS[(n-1)%ANTHEMS.length];
+ document.getElementById("anthemDay").textContent="Day "+n;
+
+ const box=document.getElementById("checks");box.innerHTML="";
+ if(!hs.length) box.innerHTML='<div class="mini">No habits active for this date. Add a habit from Profile.</div>';
+ hs.forEach(h=>{
+  const r=document.createElement("div");r.className="check "+(x.checks[h.id]?"done":"");
+  r.innerHTML='<input type="checkbox" '+(x.checks[h.id]?"checked":"")+'><label style="flex:1">'+h.name+'</label><span class="habitMeta">'+(h.time?("⏰ "+h.time):"")+"</span>";
+  r.querySelector("input").onchange=e=>{x.checks[h.id]=e.target.checked;saveLocal();queueSync();render()};
+  box.appendChild(r);
+ });
+
+ const cal=document.getElementById("calendar");cal.innerHTML="";
+ for(let i=1;i<=S.challengeDays;i++){
+  const b=document.createElement("button");b.className="day "+(isFull(i)?"done ":"")+(i===currentDay?"today ":"")+(i===S.selected?"selected":"");
+  b.textContent=i;b.title=fmt(dayDate(i));b.onclick=()=>{S.selected=i;saveLocal();show("today");render()};
+  cal.appendChild(b);
+ }
+ const z=stats();
+ document.getElementById("full").textContent=z.full;
+ document.getElementById("best").textContent=z.best;
+ document.getElementById("overall").style.width=(z.totalPossible?(z.total/z.totalPossible*100):0)+"%";
+ const hsbox=document.getElementById("habitStats");hsbox.innerHTML="";
+ S.habits.forEach(h=>{
+   let n=0,total=0;for(let q=1;q<=S.challengeDays;q++){if(activeHabits(q).some(a=>a.id===h.id)){total++;if(dayState(q).checks[h.id])n++}}
+   const r=document.createElement("div");r.className="check";
+   r.innerHTML='<div style="flex:1"><label>'+escapeHtml(h.name)+'</label><div class="progress" style="margin-top:7px"><i style="width:'+(total?n/total*100:0)+'%"></i></div></div><span class="mini">'+n+"/"+total+"</span>";
+   hsbox.appendChild(r);
+ });
+ renderProfile();
+ renderHabitList();
+ renderCharts();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function renderProfile(){
+ document.getElementById("profileName").value=S.name||"";
+ document.getElementById("startDate").value=S.startDate;
+ document.getElementById("challengeDays").value=S.challengeDays;
+ document.getElementById("journeyTitle").textContent=(S.challengeDays===111?"111-day journey":S.challengeDays+"-day journey");
+ document.getElementById("syncCode").value=S.syncCode||"";
+}
+function renderHabitList(){
+ const box=document.getElementById("habitList");box.innerHTML="";
+ S.habits.forEach(h=>{
+  const r=document.createElement("div");r.className="habitItem";
+  r.innerHTML='<div style="flex:1"><b>'+escapeHtml(h.name)+'</b><div class="mini">'+(h.time?"⏰ "+h.time+" · ":"")+"from "+fmt(h.startDate||S.startDate)+'</div></div><button class="smallBtn" data-edit="'+h.id+'">Edit</button><button class="smallBtn" data-del="'+h.id+'">Delete</button>';
+  r.querySelector("[data-edit]").onclick=()=>openHabit(h);
+  r.querySelector("[data-del]").onclick=()=>{if(confirm("Delete this habit? Its saved checks will stay in backups but the habit will stop appearing.")){S.habits=S.habits.filter(a=>a.id!==h.id);saveLocal();queueSync();render()}};
+  box.appendChild(r);
+ });
+}
+function show(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>show(b.dataset.view));
+
+function theme(){S.theme=S.theme==="dark"?"light":"dark";saveLocal();queueSync();render()}
+document.getElementById("theme").onclick=theme;document.getElementById("dark").onclick=theme;
+
+document.getElementById("save").onclick=()=>{
+ let x=dayState(S.selected);x.task=document.getElementById("task").value.trim();
+ x.minutes=Math.max(0,Math.min(1440,Number(document.getElementById("minutes").value)||0));
+ x.learned=document.getElementById("learned").value.trim();x.well=document.getElementById("well").value.trim();
+ saveLocal();queueSync();render();
+};
+document.getElementById("reset").onclick=()=>{
+ if(confirm("Reset this day?")){S.days[S.selected]={checks:{},task:"",minutes:0,learned:"",well:""};saveLocal();queueSync();render()}
+};
+document.getElementById("export").onclick=()=>{
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));a.download="ash-discipline-backup.json";a.click();
+};
+document.getElementById("clear").onclick=()=>{if(confirm("Clear all local Ash Discipline data?")){localStorage.removeItem(K);location.reload()}};
+
+document.getElementById("saveProfile").onclick=()=>{
+ S.name=document.getElementById("profileName").value.trim()||"Ash";
+ S.startDate=document.getElementById("startDate").value||todayISO();
+ S.challengeDays=Math.max(1,Math.min(1000,Number(document.getElementById("challengeDays").value)||111));
+ S.selected=Math.min(S.selected,S.challengeDays);
+ saveLocal();queueSync();render();
+};
+document.getElementById("newCode").onclick=()=>{
+ if(confirm("Create a new sync code? Your current cloud data will remain under the old code.")){S.syncCode=makeCode();saveLocal();render();setSyncStatus("New code ready")}
+};
+
+const modal=document.getElementById("habitModal");
+function openHabit(h=null){
+ editingHabit=h?h.id:null;
+ document.getElementById("modalTitle").textContent=h?"Edit habit":"Add habit";
+ document.getElementById("habitName").value=h?h.name:"";
+ document.getElementById("habitTime").value=h?h.time:"";
+ document.getElementById("habitDate").value=h?(h.startDate||S.startDate):S.startDate;
+ document.getElementById("saveHabit").textContent=h?"Save changes":"Add habit";
+ modal.classList.add("show");setTimeout(()=>document.getElementById("habitName").focus(),30);
+}
+function closeHabit(){modal.classList.remove("show");editingHabit=null}
+document.getElementById("addHabit").onclick=()=>openHabit();
+document.getElementById("addHabitTop").onclick=()=>openHabit();
+document.getElementById("manageHabits").onclick=()=>{show("profile");setTimeout(()=>document.getElementById("habitList").scrollIntoView({behavior:"smooth"}),50)};
+document.getElementById("closeHabit").onclick=closeHabit;document.getElementById("cancelHabit").onclick=closeHabit;
+modal.onclick=e=>{if(e.target===modal)closeHabit()};
+document.getElementById("saveHabit").onclick=()=>{
+ const name=document.getElementById("habitName").value.trim();if(!name){alert("Enter a habit name.");return}
+ const h={id:editingHabit||("h"+uid()),name,time:document.getElementById("habitTime").value,startDate:document.getElementById("habitDate").value||S.startDate};
+ if(editingHabit){const i=S.habits.findIndex(a=>a.id===editingHabit);if(i>=0)S.habits[i]=h}
+ else S.habits.push(h);
+ saveLocal();queueSync();closeHabit();render();
+};
+
+let syncTimer=null;
+function configured(){return FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.startsWith("PASTE_") && FIREBASE_CONFIG.databaseURL && !FIREBASE_CONFIG.databaseURL.includes("PASTE_")}
+function setSyncStatus(t,ok=false){const e=document.getElementById("syncStatus");e.textContent=t;e.style.color=ok?"var(--good)":""}
+function initFirebase(){
+ if(!configured()){setSyncStatus("Setup needed");return}
+ try{
+  if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
+  db=firebase.database();
+  const ref=db.ref("ash-discipline/"+encodeURIComponent(S.syncCode));
+  ref.on("value",snap=>{
+   const cloud=snap.val();
+   if(cloud && cloud.updatedAt && cloud.updatedAt>S.updatedAt){
+     const keepCode=S.syncCode,keepTheme=S.theme;
+     S=cloud;S.syncCode=keepCode;S.theme=S.theme||keepTheme;saveLocal();render();setSyncStatus("Synced",true);
+   } else if(cloud){setSyncStatus("Synced",true)}
+  },()=>setSyncStatus("Offline"));
+  setSyncStatus("Ready",true);
+ }catch(e){console.error(e);setSyncStatus("Setup error")}
+}
+function pushCloud(){
+ if(!db)return;
+ syncing=true;setSyncStatus("Saving…");
+ S.updatedAt=Date.now();
+ db.ref("ash-discipline/"+encodeURIComponent(S.syncCode)).set(S).then(()=>{syncing=false;setSyncStatus("Synced",true)}).catch(()=>{syncing=false;setSyncStatus("Offline")});
+}
+function queueSync(){saveLocal();clearTimeout(syncTimer);syncTimer=setTimeout(pushCloud,350)}
+document.getElementById("syncNow").onclick=()=>{
+ if(!configured()){alert("Add your Firebase Web App config at the top of index.html first.");return}
+ if(!db)initFirebase();setTimeout(pushCloud,300);
+};
+document.getElementById("syncCode").onchange=()=>{
+ const v=document.getElementById("syncCode").value.trim().toUpperCase();
+ if(v){S.syncCode=v;saveLocal();if(db)initFirebase();setSyncStatus("Code changed")}
+};
+
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&db)initFirebase()});
+render();initFirebase();
+})();
+</script>
+</body></html>
